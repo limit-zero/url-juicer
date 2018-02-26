@@ -24,10 +24,10 @@ module.exports = {
 
     const { extractTitle, extractDescription, extractOpenGraph } = extractor;
 
-    const output = {
+    return {
       status: response.statusCode,
       url: { original: url, resolved, redirected: url !== resolved },
-      host: (new URL(resolved)).host,
+      host: (new URL(resolved)).hostname,
       time: response.timings.end,
       title: extractTitle($),
       meta: {
@@ -35,8 +35,6 @@ module.exports = {
         og: extractOpenGraph($),
       },
     };
-    console.info(output);
-    return output;
   },
 
   /**
