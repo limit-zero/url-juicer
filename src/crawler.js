@@ -1,13 +1,7 @@
 const rp = require('request-promise');
 const cheerio = require('cheerio');
-const { URL } = require('url');
-const { isURL } = require('validator');
+const urlUtil = require('./url');
 const extractor = require('./extractor');
-
-const urlOpts = {
-  protocols: ['http', 'https'],
-  require_protocol: true,
-};
 
 module.exports = {
   /**
@@ -27,7 +21,7 @@ module.exports = {
     return {
       status: response.statusCode,
       url: { original: url, resolved, redirected: url !== resolved },
-      host: (new URL(resolved)).hostname,
+      host: urlUtil.parse(resolved).hostname,
       time: response.timings.end,
       title: extractTitle($),
       meta: {
@@ -58,12 +52,12 @@ module.exports = {
    * Validates the provided URL.
    * If valid, will return `true`, otherwise will throw an `Error`.
    *
-   * @param {string} url
+   * @param {string} value
    * @return {boolean}
    * @throws {Error}
    */
   validate(url) {
-    if (!isURL(String(url), urlOpts)) {
+    if (!urlUtil.isValid(url)) {
       throw new Error(`The provided value '${url}' is not a valid URL.`);
     }
     return true;
