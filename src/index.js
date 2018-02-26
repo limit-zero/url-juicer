@@ -1,3 +1,4 @@
-const crawl = require('./crawl');
+const crawler = require('./crawler');
+const extractor = require('./extractor');
 
-module.exports = { crawl };
+module.exports = { crawler, extractor };
