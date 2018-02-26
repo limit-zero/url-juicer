@@ -4,10 +4,6 @@ const crawler = require('../src/crawler');
 const sandbox = sinon.createSandbox();
 
 describe('crawler', function() {
-  before(function() {
-    // sandbox.stub(rp, 'Request').resolves()
-  });
-
   it('should export an object.', function(done) {
     expect(crawler).to.be.an('object');
     done();
