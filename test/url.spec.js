@@ -1,7 +1,7 @@
 const { URL } = require('url');
 const url = require('../src/url');
 
-describe('crawler', function() {
+describe('url', function() {
   it('should export an object.', function(done) {
     expect(url).to.be.an('object');
     done();
