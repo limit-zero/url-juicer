@@ -9,7 +9,7 @@ describe('crawler', function() {
     done();
   });
   describe('#validate', function() {
-    ['', null, undefined, false, 0, 'somestring', 'ftp://google.com', 'localhost', '//some/path', 'http://', 'https://', 'http://not-fqdn'].forEach((value) => {
+    ['', null, undefined, false, 0, 'somestring', 'ftp://google.com', 'localhost', '//some/path', 'http://', 'https://', 'http://localhost'].forEach((value) => {
       it(`should throw an error when the url is '${value}'.`, function(done) {
         expect(() => crawler.validate(value)).to.throw(Error, `The provided value '${value}' is not a valid URL.`);
         done();

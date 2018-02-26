@@ -7,7 +7,7 @@ describe('url', function() {
     done();
   });
   describe('#validate', function() {
-    ['', null, undefined, false, 0, 'somestring', 'ftp://google.com', 'localhost', '//some/path', 'http://', 'https://', 'http://not-fqdn'].forEach((value) => {
+    ['', null, undefined, false, 0, 'somestring', 'ftp://google.com', 'localhost', '//some/path', 'http://', 'https://', 'http://localhost'].forEach((value) => {
       it(`should throw an error when the url is '${value}'.`, function(done) {
         expect(url.isValid(value)).to.be.false;
         done();
