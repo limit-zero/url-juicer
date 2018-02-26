@@ -28,6 +28,7 @@ module.exports = {
         description: extractDescription($),
         og: extractOpenGraph($),
       },
+      body: response.body,
     };
   },
 
