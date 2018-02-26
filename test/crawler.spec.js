@@ -14,13 +14,15 @@ describe('crawler', function() {
   });
   describe('#validate', function() {
     ['', null, undefined, false, 0, 'somestring', 'ftp://google.com', 'localhost', '//some/path', 'http://', 'https://', 'http://not-fqdn'].forEach((value) => {
-      it(`should throw an error when the url is '${value}'.`, function() {
+      it(`should throw an error when the url is '${value}'.`, function(done) {
         expect(() => crawler.validate(value)).to.throw(Error, `The provided value '${value}' is not a valid URL.`);
+        done();
       });
     });
     ['http://google.com', 'https://google.com/', 'http://www.google.com:80', 'https://www.google.com/foo?bar=baz', 'http://user:password@google.com'].forEach((value) => {
-      it(`should return true when the url is '${value}'.`, function() {
+      it(`should return true when the url is '${value}'.`, function(done) {
         expect(crawler.validate(value)).to.be.true;
+        done();
       });
     });
   });
