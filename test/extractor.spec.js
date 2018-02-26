@@ -3,6 +3,13 @@ const extractor = require('../src/extractor');
 
 
 describe('extractor', function() {
+  describe('#cheerio', function() {
+    it('should return a Cheerio function.', function(done) {
+      expect(extractor.cheerio('<div></div>')).to.be.a('function');
+      done();
+    });
+  });
+
   describe('#extractTitle', function() {
     [
       '<title data-some-attr="foo">Title here&excl;</title>',
@@ -13,7 +20,7 @@ describe('extractor', function() {
       '<TITLE>Title here&excl;</title>',
     ].forEach((value) => {
       it(`should return the proper title when provided a Cheerio instance with value of '${value}'.`, function(done) {
-        const $ = cheerio.load(value);
+        const $ = extractor.cheerio(value);
         expect(extractor.extractTitle($)).to.equal('Title here!');
         done();
       });

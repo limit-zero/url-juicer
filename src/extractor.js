@@ -1,4 +1,16 @@
+const cheerio = require('cheerio');
+
 module.exports = {
+  /**
+   * Creates a Cheerio function instance from the provided HTML.
+   *
+   * @param {string} html
+   * @return {function}
+   */
+  cheerio(html) {
+    return cheerio.load(html);
+  },
+
   /**
    * Extracts the description text from the `<meta name="description">` content value.
    *
