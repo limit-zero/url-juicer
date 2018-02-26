@@ -25,5 +25,14 @@
     "mocha": "^5.0.1",
     "nyc": "^11.4.1",
     "sinon": "^4.4.0"
+  },
+  "nyc": {
+    "check-coverage": false,
+    "per-file": true,
+    "all": true,
+    "cache": false,
+    "include": [
+      "src/**/*.js"
+    ]
   }
 }
