@@ -9,12 +9,14 @@ const validatorOpts = {
 module.exports = {
   /**
    * Determines if the URL is valid.
+   * Because leading/trailing whitespace causes the validator to fail,
+   * the test value will be trimmed.
    *
    * @param {string} url
    * @return {boolean}
    */
   isValid(url) {
-    return isURL(String(url), validatorOpts);
+    return isURL(String(url).trim(), validatorOpts);
   },
 
   /**
