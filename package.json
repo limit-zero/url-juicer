@@ -5,6 +5,10 @@
   "main": "src/index.js",
   "author": "Jacob Bare <jacob@limit0.io>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/limit-zero/url-juicer.git"
+  },
   "scripts": {
     "test": "yarn run lint && ./node_modules/.bin/mocha --reporter spec",
     "lint": "./node_modules/.bin/eslint \"src/**/*.js\"",
