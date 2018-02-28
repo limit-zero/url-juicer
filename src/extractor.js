@@ -1,4 +1,5 @@
 const cheerio = require('cheerio');
+const urlUtil = require('./url');
 
 module.exports = {
   /**
@@ -44,5 +45,21 @@ module.exports = {
    */
   extractTitle($) {
     return $('title').first().text();
+  },
+
+  /**
+   * Extracts all href values from `<a>` elements and returns as a unique array.
+   * Will only include URLs that are deemed valid from the URL utility.
+   *
+   * @param {function} $ The Cheerio function instance (with loaded HTML).
+   * @return {string}
+   */
+  extractUrls($) {
+    const hrefs = [];
+    $('a[href]').each(function extract() {
+      const href = $(this).attr('href');
+      if (urlUtil.isValid(href)) hrefs.push(href);
+    });
+    return [...new Set(hrefs)];
   },
 };

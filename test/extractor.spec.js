@@ -162,4 +162,86 @@ describe('extractor', function() {
       });
     });
   });
+
+  describe('#extractUrls', function() {
+    [
+      '',
+      '<a>foo</a>',
+      `<a>foo</a><a href="">bar</a>`,
+      `<a href="ftp://foo.com">baz</a>`,
+      `<a href="tel://1234567">baz</a>`,
+      `<a href="mailto://bar@foo.com">baz</a>`,
+      `<a href="www.foo.com">baz</a>`,
+      `<a href="http">baz</a><a href="http:">baz</a>`,
+      `<a href="https">baz</a><a href="https:">baz</a>`,
+    ].forEach((value) => {
+      it(`should return an empty array when the value is '${value}'.`, function(done) {
+        const $ = cheerio.load(value);
+        const urls = extractor.extractUrls($);
+        expect(urls).to.be.an('array');
+        expect(urls).to.deep.equal([]);
+        done();
+      });
+    });
+    [
+      `
+      <a href="http://www.google.com"></a>
+      <a href="https://www.google.com"></a>
+      `,
+      `
+      <a href="http://www.google.com"></a>
+      <a href="http://www.google.com"></a>
+      <a href="https://www.google.com"></a>
+      `,
+      `
+      <a href="http://www.google.com"></a>
+      <a href="http://www.google.com"></a>
+      <a href="http://www.google.com"></a>
+      <a href="https://www.google.com"></a>
+      <a href="https://www.google.com"></a>
+      `,
+    ].forEach((value) => {
+      it(`should return the a unique array of URLs when the value is '${value}'.`, function(done) {
+        const $ = cheerio.load(value);
+        const urls = extractor.extractUrls($);
+        expect(urls).to.be.an('array');
+        expect(urls).to.deep.equal(['http://www.google.com', 'https://www.google.com']);
+        done();
+      });
+    });
+    [
+      { value: '<a href="http://www.google.com?foo=bar&amp;baz=dill"></a>', expected: 'http://www.google.com?foo=bar&baz=dill' },
+      { value: '<a href="http://www.google.com?foo=bar&#38;baz=dill"></a>', expected: 'http://www.google.com?foo=bar&baz=dill' },
+    ].forEach((html) => {
+      it(`should properly decode HTML ampersand entities in the URLs when the value is '${html.value}'.`, function(done) {
+        const $ = cheerio.load(html.value);
+        const urls = extractor.extractUrls($);
+        expect(urls[0]).to.equal(html.expected);
+        done();
+      });
+    });
+    [
+      { value: '<a href="http://www.google.com/some%20path"></a>', expected: 'http://www.google.com/some%20path' },
+      { value: '<a href="http://www.google.com?q=%3Ffoo%3Dbar"></a>', expected: 'http://www.google.com?q=%3Ffoo%3Dbar' },
+    ].forEach((html) => {
+      it(`should properly retain URL encoded values when the value is '${html.value}'.`, function(done) {
+        const $ = cheerio.load(html.value);
+        const urls = extractor.extractUrls($);
+        expect(urls[0]).to.equal(html.expected);
+        done();
+      });
+    });
+    [
+      { value: '<a href="http://www.google.com?foo=🙃"></a>', expected: 'http://www.google.com?foo=🙃' },
+      { value: '<a href="http://www.google.com/🙃/🙃"></a>', expected: 'http://www.google.com/🙃/🙃' },
+      { value: '<a href="http://www.google.com/?🙃=🙃"></a>', expected: 'http://www.google.com/?🙃=🙃' },
+    ].forEach((html) => {
+      it(`should properly retain unicode values when the value is '${html.value}'.`, function(done) {
+        const $ = cheerio.load(html.value);
+        const urls = extractor.extractUrls($);
+        expect(urls[0]).to.equal(html.expected);
+        done();
+      });
+    });
+  });
 });
