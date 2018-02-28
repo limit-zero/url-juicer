@@ -279,12 +279,12 @@ describe('extractor', function() {
 
     const fileUrls = {};
     before(function(done) {
-      fs.readFile(__dirname + '/html-samples/email-1.html', 'utf8', (err, html) => {
+      fs.readFile(__dirname + '/html-samples/email-1.samp', 'utf8', (err, html) => {
         if (err) {
           done(err);
         } else {
           const $ = cheerio.load(html);
-          fileUrls['email-1.html'] = extractor.extractUrls($);
+          fileUrls['email-1.samp'] = extractor.extractUrls($);
           done();
         }
       });
@@ -324,7 +324,7 @@ describe('extractor', function() {
         'http://www.ien.com/advertise',
         'http://www.ien.com/privacy-policy'
       ];
-      const extracted = fileUrls['email-1.html'];
+      const extracted = fileUrls['email-1.samp'];
       urls.forEach((url) => {
         expect(extracted).to.include(url);
       });
