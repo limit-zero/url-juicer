@@ -217,6 +217,19 @@ describe('extractor', function() {
       expect(urls).to.deep.equal(['http://www.google.com ', 'http://www.google.com']);
       done();
     });
+    it('should handle not-so-pretty markup.', function(done) {
+     const value = `
+        <a href=http://www.google.com></a>
+        <a href='http://www.amazon.com'></a>
+        <a HREF=http://www.foo.com></a>
+      `;
+      const $ = cheerio.load(value);
+      const urls = extractor.extractUrls($);
+      expect(urls).to.be.an('array');
+      expect(urls).to.deep.equal(['http://www.google.com', 'http://www.amazon.com', 'http://www.foo.com']);
+      done();
+
+    });
     [
       { value: '<a href="http://www.google.com?foo=bar&amp;baz=dill"></a>', expected: 'http://www.google.com?foo=bar&baz=dill' },
       { value: '<a href="http://www.google.com?foo=bar&#38;baz=dill"></a>', expected: 'http://www.google.com?foo=bar&baz=dill' },
