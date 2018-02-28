@@ -210,6 +210,13 @@ describe('extractor', function() {
         done();
       });
     });
+    it(`should not inherently trim the URL values.`, function(done) {
+      const $ = cheerio.load(`<a href="http://www.google.com "></a><a href="http://www.google.com"></a>`);
+      const urls = extractor.extractUrls($);
+      expect(urls).to.be.an('array');
+      expect(urls).to.deep.equal(['http://www.google.com ', 'http://www.google.com']);
+      done();
+    });
     [
       { value: '<a href="http://www.google.com?foo=bar&amp;baz=dill"></a>', expected: 'http://www.google.com?foo=bar&baz=dill' },
       { value: '<a href="http://www.google.com?foo=bar&#38;baz=dill"></a>', expected: 'http://www.google.com?foo=bar&baz=dill' },
