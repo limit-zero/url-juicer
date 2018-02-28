@@ -1,3 +1,4 @@
+const fs = require('fs');
 const cheerio = require('cheerio');
 const extractor = require('../src/extractor');
 
@@ -242,6 +243,73 @@ describe('extractor', function() {
         expect(urls[0]).to.equal(html.expected);
         done();
       });
+    });
+    it('should ignore commented-out URLs.', function(done) {
+      const value = `
+        <a href="http://www.google.com"></a>
+        <!-- <a href="https://www.google.com"></a> -->
+        <!--a href="https://www.amazon.com"></a-->
+      `;
+      const $ = cheerio.load(value);
+      const urls = extractor.extractUrls($);
+      expect(urls).to.be.an('array');
+      expect(urls).to.deep.equal(['http://www.google.com']);
+      done();
+    });
+
+    const fileUrls = {};
+    before(function(done) {
+      fs.readFile(__dirname + '/html-samples/email-1.html', 'utf8', (err, html) => {
+        if (err) {
+          done(err);
+        } else {
+          const $ = cheerio.load(html);
+          fileUrls['email-1.html'] = extractor.extractUrls($);
+          done();
+        }
+      });
+    });
+
+    it(`should properly extract URLs from a large HTML file.`, function(done) {
+      const urls = [
+        'http://pubads.g.doubleclick.net/gampad/jump?co=1&iu=137873098/IEN-Newsletters-600x100&sz=600x100&c=2035059159&t=dayofweek%3DTue%26nl_date%3D2018-02-27%26weeknum%3D09%26month%3D02%26day%3D27%26year%3D2018%26nl_name%3DIEN%2BToday%26nl_id%3D56781dd03aab46f646b2f060',
+        'http://www.ien.com',
+        'http://www.ien.com/operations/news/20994104/fed-points-to-strong-outlook-gradual-rate-hikes',
+        'http://www.ien.com/product-development/video/20994112/how-to-ruin-a-selfdriving-car',
+        'http://www.ien.com/operations/news/20994141/boeing-trump-reach-deal-on-air-force-one',
+        'http://www.ien.com/operations/news/20994077/jack-daniels-fights-whiskey-barrel-tax',
+        'https://ien.wufoo.com/forms/zfvbiuf02nohd9/',
+        'https://www.facebook.com/IndustrialEquipmentNews/',
+        'http://www.ien.com/product-development/news/20994115/how-to-use-bitcoin-to-buy-a-subaru',
+        'http://www.ien.com/operations/news/20994098/residents-protest-lead-plant-in-indiana',
+        'http://ezledmh.oeo.com/08-ien_20_for_1000_eblast_3/',
+        'http://www.ien.com/product-development/news/20994139/ford-forms-test-bed-for-selfdriving-cars',
+        'http://www.ien.com/product-development/news/20994085/state-oks-autonomous-vehicle-tests-without-backup-drivers',
+        'http://www.ien.com/new-products/material-handling-storage/product/20993424/creform-simple-cart-offers-flexibility-durability',
+        'https://www.khkgears.us/products/',
+        'http://www.khkgears.us',
+        'http://www.ien.com/operations/news/20994110/incinerating-trash-is-not-effective',
+        'http://www.ien.com/new-products/general-equipment/product/20993954/ledtronics-led-machine-status-indicator-utility-bulbs',
+        'https://www.sealconusa.com/products/circular-connectors/twilock/',
+        'http://www.ien.com/operations/news/20994088/durable-goods-down-37-percent',
+        'http://www.ien.com/regulation/news/20994081/geman-courts-approve-diesel-ban-option',
+        'http://ladderindustries.com/',
+        'http://www.ladderindustries.com',
+        'http://www.ien.com/product-development/news/20994119/researchers-enhance-computer-chips-for-impending-advancements',
+        'http://www.ien.com/new-products/marking-packaging/product/20993437/laser-photonics-handheld-marking-engraving',
+        'https://www.dornerconveyors.com/iene',
+        'http://www.ien.com/product-development/news/20994152/scapa-opens-3-rd-centers',
+        'http://www.ien.com/contact-us',
+        'http://www.ien.com/subscribe/email',
+        'http://www.ien.com/advertise',
+        'http://www.ien.com/privacy-policy'
+      ];
+      const extracted = fileUrls['email-1.html'];
+      urls.forEach((url) => {
+        expect(extracted).to.include(url);
+      });
+      expect(extracted.length).to.equal(urls.length);
+      done();
     });
   });
 });
