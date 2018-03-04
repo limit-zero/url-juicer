@@ -57,7 +57,7 @@ module.exports = {
   extractUrls($) {
     const hrefs = [];
     $('a[href]').each(function extract() {
-      const href = $(this).attr('href');
+      const href = $(this).attr('href').trim();
       if (urlUtil.isValid(href)) hrefs.push(href);
     });
     return [...new Set(hrefs)];
