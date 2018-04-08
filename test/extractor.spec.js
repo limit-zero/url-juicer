@@ -279,6 +279,31 @@ describe('extractor', function() {
       done();
     });
 
+    it('should decode HTML entities.', function(done) {
+      const value = `
+        <a href="https://www.google.com/foo/&copy;"></a>
+        <a href="https://goo&trade;gle.com/"></a>
+        <a href="https://google.com?foo=bar&amp;bar=foo"></a>
+      `;
+      const $ = cheerio.load(value);
+      const urls = extractor.extractUrls($);
+      expect(urls).to.be.an('array');
+      expect(urls).to.deep.equal(['https://www.google.com/foo/©', 'https://goo™gle.com/', 'https://google.com?foo=bar&bar=foo']);
+      done();
+    });
+
+    it('should preserve a trailing slash.', function(done) {
+      const value = `
+        <a href="https://google.com"></a>
+        <a href="https://google.com/"></a>
+      `;
+      const $ = cheerio.load(value);
+      const urls = extractor.extractUrls($);
+      expect(urls).to.be.an('array');
+      expect(urls).to.deep.equal(['https://google.com', 'https://google.com/']);
+      done();
+    });
+
     const fileUrls = {};
     before(function(done) {
       fs.readFile(__dirname + '/html-samples/email-1.samp', 'utf8', (err, html) => {
