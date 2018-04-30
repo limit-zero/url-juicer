@@ -1,6 +1,6 @@
 {
   "name": "url-juicer",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Squeeze some juice from URLs: A URL crawler/extraction library.",
   "main": "src/index.js",
   "author": "Jacob Bare <jacob@limit0.io>",
