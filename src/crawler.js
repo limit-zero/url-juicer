@@ -3,6 +3,8 @@ const cheerio = require('cheerio');
 const urlUtil = require('./url');
 const extractor = require('./extractor');
 
+const { assign } = Object;
+
 module.exports = {
   /**
    * Crawls the provided URL and resolves with a URL output object.
@@ -37,15 +39,17 @@ module.exports = {
    * Will reject on an invalid URL, connection issue, or non-200 response.
    *
    * @param {string} url
+   * @param {?object} options The `request` library options to include.
    * @return {Promise}
    */
-  async request(url) {
+  async request(url, options) {
     this.validate(url);
-    const response = await rp({
+    const opts = assign({}, options, {
       uri: url,
       resolveWithFullResponse: true,
       time: true,
     });
+    const response = await rp(opts);
     return response;
   },
 

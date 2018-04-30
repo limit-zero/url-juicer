@@ -39,6 +39,18 @@ describe('crawler', function() {
       await expect(crawler.request('https://www.google.com')).to.eventually.be.an('object');
       sinon.assert.calledWith(rp.Request, { uri: 'https://www.google.com', resolveWithFullResponse: true, time: true, callback: undefined });
     });
+    it('should accept request options.', async function() {
+      const options = {
+        jar: true,
+        headers: {
+          Connection: 'close',
+        },
+      };
+      await expect(crawler.request('https://www.google.com', options)).to.eventually.be.an('object');
+      sinon.assert.calledWith(rp.Request, { uri: 'https://www.google.com', resolveWithFullResponse: true, time: true, callback: undefined, jar: true, headers: {
+        Connection: 'close',
+      }});
+    });
   });
 
   describe('#crawl', function() {
