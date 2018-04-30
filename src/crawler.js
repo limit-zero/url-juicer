@@ -11,10 +11,11 @@ module.exports = {
    * Will reject on an invalid URL, connection issue, or non-200 response.
    *
    * @param {string} url
+   * @param {?object} options The `request` library options to include.
    * @return {Promise}
    */
-  async crawl(url) {
-    const response = await this.request(url);
+  async crawl(url, options) {
+    const response = await this.request(url, options);
     const $ = cheerio.load(response.body);
     const resolved = response.request.uri.href;
 
