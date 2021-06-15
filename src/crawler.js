@@ -32,6 +32,7 @@ module.exports = {
         og: extractOpenGraph($),
       },
       body: response.body,
+      original: response,
     };
   },
 
